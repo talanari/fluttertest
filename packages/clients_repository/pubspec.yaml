@@ -1,0 +1,22 @@
+name: clients_repository
+description: A repository that handles clients related requests.
+publish_to: none
+
+version: 1.0.0+1
+
+environment:
+  sdk: ">=2.17.1 <3.0.0"
+  flutter: ">=1.17.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  clients_api:
+    path: ../clients_api
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^2.0.0
+  mocktail: ^0.3.0 # A Dart mock library which simplifies mocking with null safety support and no manual mocks or code generation.
+  test: ^1.21.1 # A full featured library for writing and running Dart tests across platforms.
