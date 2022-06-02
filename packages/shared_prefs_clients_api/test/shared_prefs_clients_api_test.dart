@@ -104,12 +104,12 @@ void main() {
     group('saveClient', () {
       test('saves new client', () {
         final newClient = Client(
-          id: '5',
+          id: '4',
           name: 'Michael',
           city: 'Los Angeles',
           expenses: 5.5,
         );
-        final newClients = [...clients, newClient];
+        final newClients = [...clients]..[4] = newClient;
         final subject = createSubject();
 
         expect(subject.saveClient(newClient), completes);
@@ -125,16 +125,16 @@ void main() {
 
       test('saves new client with default values', () {
         final newClient = Client(
-          id: '6',
+          id: '4',
           name: 'Helen',
         );
         final newClientWithDefaultValues = Client(
-          id: '6',
+          id: '4',
           name: 'Helen',
           city: 'Batumi',
           expenses: 0,
         );
-        final newClients = [...clients, newClientWithDefaultValues];
+        final newClients = [...clients]..[4] = newClientWithDefaultValues;
         final subject = createSubject();
 
         expect(subject.saveClient(newClient), completes);
