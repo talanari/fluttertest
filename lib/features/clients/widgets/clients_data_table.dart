@@ -6,6 +6,7 @@ import 'package:clients_repository/clients_repository.dart';
 import 'package:fluttertest/constants/constants.dart';
 import 'package:fluttertest/features/clients/clients.dart';
 import 'package:fluttertest/shared_widgets/small_text.dart';
+import 'package:fluttertest/utils/comma_text_input_formatter.dart';
 
 import 'clients_data_cell_input.dart';
 
@@ -81,9 +82,10 @@ class ClientsDataTable extends StatelessWidget {
                                 key: Key('__${client.id!}_expenses_data_table_input__'),
                                 initialValue: client.expenses.toString(),
                                 inputFormatters: [
-                                  FilteringTextInputFormatter(RegExp(Formatters.expenses), allow: true)
+                                  FilteringTextInputFormatter(RegExp(Formatters.expenses), allow: true),
+                                  CommaTextInputFormatter(),
                                 ],
-                                keyboardType: TextInputType.number,
+                                keyboardType: const TextInputType.numberWithOptions(decimal: true),
                                 onChanged: (expenses) => context.read<EditClientBloc>().add(EditClientEditing(editState
                                     .editedClients[client.id]!
                                     .copyWith(expenses: expenses != '' ? double.parse(expenses) : null))),
@@ -161,8 +163,11 @@ class ClientsDataTable extends StatelessWidget {
                       DataCell(
                         ClientsDataCellInput(
                           key: const Key('__New_expenses_data_table_input__'),
-                          inputFormatters: [FilteringTextInputFormatter(RegExp(Formatters.expenses), allow: true)],
-                          keyboardType: TextInputType.number,
+                          inputFormatters: [
+                            FilteringTextInputFormatter(RegExp(Formatters.expenses), allow: true),
+                            CommaTextInputFormatter(),
+                          ],
+                          keyboardType: const TextInputType.numberWithOptions(decimal: true),
                           onChanged: (expenses) => context.read<EditClientBloc>().add(EditClientEditing(editState
                               .editedClients['New']!
                               .copyWith(expenses: expenses != '' ? double.parse(expenses) : null))),

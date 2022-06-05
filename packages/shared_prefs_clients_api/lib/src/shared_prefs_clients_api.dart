@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:decimal/decimal.dart';
 import 'package:meta/meta.dart';
 import 'package:rxdart/subjects.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -53,7 +54,10 @@ class SharedPrefsClientsApi implements ClientsApi {
                   'expenses': client['expenses'],
                 });
               } else {
-                newAcc[cityIndex]['expenses'] += client['expenses'];
+                // TODO: should be refactored, quickfix to double floating point precision problem using Decimal package
+                newAcc[cityIndex]['expenses'] = (Decimal.parse(newAcc[cityIndex]['expenses'].toString()) +
+                        Decimal.parse(client['expenses'].toString()))
+                    .toDouble();
               }
 
               return newAcc;
@@ -91,8 +95,11 @@ class SharedPrefsClientsApi implements ClientsApi {
     final cityIndex = expensesByCity.indexWhere((t) => t.city == client.city);
 
     if (cityIndex >= 0) {
-      expensesByCity[cityIndex] =
-          expensesByCity[cityIndex].copyWith(expenses: expensesByCity[cityIndex].expenses + client.expenses);
+      // TODO: should be refactored, quickfix to double floating point precision problem using Decimal package
+      expensesByCity[cityIndex] = expensesByCity[cityIndex].copyWith(
+          expenses:
+              (Decimal.parse(expensesByCity[cityIndex].expenses.toString()) + Decimal.parse(client.expenses.toString()))
+                  .toDouble());
     } else {
       expensesByCity.add(ExpensesByCity(city: client.city, expenses: client.expenses));
     }
@@ -131,8 +138,11 @@ class SharedPrefsClientsApi implements ClientsApi {
     if (hasCityLostAllClients) {
       expensesByCity.removeAt(oldCityIndex);
     } else {
-      expensesByCity[oldCityIndex] =
-          expensesByCity[oldCityIndex].copyWith(expenses: expensesByCity[oldCityIndex].expenses - oldClient.expenses);
+      // TODO: should be refactored, quickfix to double floating point precision problem using Decimal package
+      expensesByCity[oldCityIndex] = expensesByCity[oldCityIndex].copyWith(
+          expenses: (Decimal.parse(expensesByCity[oldCityIndex].expenses.toString()) -
+                  Decimal.parse(oldClient.expenses.toString()))
+              .toDouble());
     }
 
     final newCityIndex = expensesByCity.indexWhere((t) => t.city == client.city);
@@ -140,8 +150,11 @@ class SharedPrefsClientsApi implements ClientsApi {
     if (hasNewCityAppeared) {
       expensesByCity.add(ExpensesByCity(city: client.city, expenses: client.expenses));
     } else {
-      expensesByCity[newCityIndex] =
-          expensesByCity[newCityIndex].copyWith(expenses: expensesByCity[newCityIndex].expenses + client.expenses);
+      // TODO: should be refactored, quickfix to double floating point precision problem using Decimal package
+      expensesByCity[newCityIndex] = expensesByCity[newCityIndex].copyWith(
+          expenses: (Decimal.parse(expensesByCity[newCityIndex].expenses.toString()) +
+                  Decimal.parse(client.expenses.toString()))
+              .toDouble());
     }
 
     _clientsExpensesStreamController.add(expensesByCity);
@@ -175,8 +188,11 @@ class SharedPrefsClientsApi implements ClientsApi {
       if (hasCityLostAllClients) {
         expensesByCity.removeAt(oldCityIndex);
       } else {
-        expensesByCity[oldCityIndex] =
-            expensesByCity[oldCityIndex].copyWith(expenses: expensesByCity[oldCityIndex].expenses - oldClient.expenses);
+        // TODO: should be refactored, quickfix to double floating point precision problem using Decimal package
+        expensesByCity[oldCityIndex] = expensesByCity[oldCityIndex].copyWith(
+            expenses: (Decimal.parse(expensesByCity[oldCityIndex].expenses.toString()) -
+                    Decimal.parse(oldClient.expenses.toString()))
+                .toDouble());
       }
 
       _clientsExpensesStreamController.add(expensesByCity);
