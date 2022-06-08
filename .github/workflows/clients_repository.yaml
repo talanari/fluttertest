@@ -1,0 +1,30 @@
+name: clients_repository
+
+on:
+  pull_request:
+    paths:
+      - "packages/clients_repository/**"
+      - ".github/workflows/clients_repository.yaml"
+
+jobs:
+  build:
+    defaults:
+      run:
+        working-directory: packages/clients_repository
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: 'stable'
+
+      - name: Install Dependencies
+        run: flutter pub get
+
+      - name: Analyze
+        run: flutter analyze --fatal-infos --fatal-warnings .
+
+      - name: Run Tests
+        run: flutter test .
